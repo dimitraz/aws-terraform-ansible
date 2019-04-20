@@ -1,0 +1,19 @@
+---
+# Playbook to configure an haproxy load balancer
+# to load balance across three apache web servers
+
+- name: Configure the haproxy load balancer
+  hosts: haproxy
+  become: true
+  roles:
+    - haproxy
+  tags:
+    - lb
+
+- name: Configure the backend servers
+  hosts: tag_Name_haproxy_web_node
+  become: true
+  roles:
+    - httpd
+  tags:
+    - backend

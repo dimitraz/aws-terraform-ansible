@@ -1,0 +1,18 @@
+- name: Install apache web server
+  yum: pkg=httpd state=latest
+
+- name: Copy the image
+  copy:
+    src: terpsitone.jpg
+    dest: /var/www/html/terpsitone.jpg
+
+- name: Update the html file
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    mode: 0664
+    owner: apache
+    group: apache
+
+- name: Restart apache
+  service: name=httpd state=restarted

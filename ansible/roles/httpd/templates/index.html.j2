@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Application 1</title>
+	<link href="https://fonts.googleapis.com/css?family=Space+Mono" rel="stylesheet">
+	<style type="text/css">
+        html, body, * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font: 19px "Space Mono", monospace;
+            color: #fff;
+            background: #000;
+        }
+        .page {
+            height: 100vh;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-align-items: center;
+            align-items: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+        }
+        .page::after {
+            content: "";
+            background: url(terpsitone.jpg) center;
+            background-size: cover;
+
+            -moz-transform: scaleY(-1);
+            -o-transform: scaleY(-1);
+            -webkit-transform: scaleY(-1);
+            transform: scaleY(-1);
+            filter: FlipV;
+            -ms-filter: "FlipV";
+        
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            opacity: 0.2;
+            position: absolute;
+            z-index: -1;   
+        }
+    </style>
+</head>
+
+<body>
+	<div class="page">
+		Hello world from {{ ansible_hostname }}!
+	</div>
+</body>
+
+</html>
