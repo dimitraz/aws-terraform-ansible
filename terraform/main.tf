@@ -89,6 +89,36 @@ resource "aws_route_table_association" "a" {
   route_table_id = "${aws_route_table.r.id}"
 }
 
+// Define our Nat Gateway
+resource "aws_nat_gateway" "ng" {
+  allocation_id = "${var.allocation_id}"
+  subnet_id     = "${aws_subnet.tf_private_subnet.id}"
+
+  tags {
+    Name = "haproxy_test_ng"
+  }
+}
+
+// Define private routing table
+resource "aws_route_table" "r_private" {
+  vpc_id = "${aws_vpc.default.id}"
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_nat_gateway.ng.id}"
+  }
+
+  tags {
+    Name = "haproxy_test_route_table_private"
+  }
+}
+
+// Routing table association for private subnet
+resource "aws_route_table_association" "a_private" {
+  subnet_id      = "${aws_subnet.tf_private_subnet.id}"
+  route_table_id = "${aws_route_table.r_private.id}"
+}
+
 // Security group for Web backends
 resource "aws_security_group" "web_node_sg" {
   name        = "web_node_sg"
@@ -308,6 +338,12 @@ resource "aws_instance" "haproxy_node" {
 
 // EIP allocation for primary static address for each HAProxy LB instance
 resource "aws_eip" "haproxy_node_eip1" {
+  count             = "${var.haproxy_cluster_size}"
+  network_interface = "${element(aws_instance.haproxy_node.*.primary_network_interface_id, count.index)}"
+  vpc               = true
+}
+
+resource "aws_eip" "nat" {
   count             = "${var.haproxy_cluster_size}"
   network_interface = "${element(aws_instance.haproxy_node.*.primary_network_interface_id, count.index)}"
   vpc               = true

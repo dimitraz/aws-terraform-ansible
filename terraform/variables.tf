@@ -38,3 +38,9 @@ variable "haproxy_cluster_size" {
   description = "Size of HAProxy Nodes cluster"
   default     = 1
 }
+
+// Allocation ID of elastic IP 
+variable "allocation_id" {
+  description = "Elastic IP address for NAT gateway"
+  default     = "eipalloc-0a5e8d6aff398d172"
+}
